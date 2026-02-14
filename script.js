@@ -1,17 +1,8 @@
-window.onload = function() {
-
-    setTimeout(function() {
-        document.getElementById("sponsorScreen").classList.add("hidden");
-        document.getElementById("logoScreen").classList.add("hidden");
-        document.getElementById("gameScreen").classList.remove("hidden");
-        startGame();
-    }, 3000);
-};
-
 let score = 0;
 let spiderVisible = false;
 let currentInstruction = null;
 let timerTimeout = null;
+let roundTime = 2500;
 
 const instructions = [
     { text: "Press", action: "PRESS" },
@@ -19,6 +10,33 @@ const instructions = [
     { text: "Press when spider appears", action: "SPIDER_PRESS" },
     { text: "Don't press when spider appears", action: "SPIDER_NO_PRESS" }
 ];
+
+window.onload = function() {
+
+    const sponsor = document.getElementById("sponsorScreen");
+    const logo = document.getElementById("logoScreen");
+    const game = document.getElementById("gameScreen");
+
+    sponsor.classList.add("fade-in");
+
+    setTimeout(function() {
+        sponsor.classList.add("fade-out");
+
+        setTimeout(function() {
+            sponsor.classList.add("hidden");
+            logo.classList.remove("hidden");
+            logo.classList.add("logo-pop");
+
+            setTimeout(function() {
+                logo.classList.add("hidden");
+                game.classList.remove("hidden");
+                startGame();
+            }, 1000);
+
+        }, 1000);
+
+    }, 1500);
+};
 
 function startGame() {
     document.getElementById("mainBtn").addEventListener("click", handlePress);
@@ -31,11 +49,15 @@ function newRound() {
     clearTimeout(timerTimeout);
     document.getElementById("spider").innerHTML = "";
 
-    // Reset timer animation
+    if (score > 0 && score % 50 === 0) {
+        roundTime -= 200;
+        if (roundTime < 1200) roundTime = 1200;
+    }
+
     const ring = document.querySelector(".timer-ring");
     ring.style.animation = "none";
     void ring.offsetWidth;
-    ring.style.animation = "spin 4s linear forwards";
+    ring.style.animation = "spin " + roundTime + "ms linear forwards";
 
     currentInstruction = instructions[Math.floor(Math.random() * instructions.length)];
     document.getElementById("instruction").innerText = currentInstruction.text;
@@ -44,10 +66,10 @@ function newRound() {
         setTimeout(function() {
             spiderVisible = true;
             document.getElementById("spider").innerHTML = "🕷";
-        }, 1500);
+        }, 1000);
     }
 
-    timerTimeout = setTimeout(evaluateRound, 4000);
+    timerTimeout = setTimeout(evaluateRound, roundTime);
 }
 
 function handlePress() {
@@ -105,6 +127,7 @@ function win() {
 function gameOver() {
     alert("Game Over! Score: " + score);
     score = 0;
+    roundTime = 2500;
     document.getElementById("score").innerText = "Score: 0";
     newRound();
 }
