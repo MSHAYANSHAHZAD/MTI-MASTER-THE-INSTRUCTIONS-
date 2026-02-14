@@ -7,19 +7,32 @@
 </head>
 <body>
 
-<h2>MTI - Master The Instruction</h2>
-
-<div id="instruction">Loading...</div>
-<div id="score">Score: 0</div>
-
-<div class="game-area">
-    <div class="progress-ring">
-        <div id="timer-ring"></div>
-        <button id="mainBtn">PRESS</button>
-    </div>
+<!-- Sponsor Screen -->
+<div id="sponsorScreen" class="fullscreen">
+    <img src="store-logo.png" class="logo-large">
+    <h2>Sponsored By</h2>
+    <h3>JEANS Express</h3>
+    <p>Symbol of Status</p>
+    <p>Location: NORTH NAZIMABAD BLOCK G MASHALLAH MARKWT SHOP 1, Pakistan</p>
 </div>
 
-<div id="spider" class="spider"></div>
+<!-- Game Logo Screen -->
+<div id="gameLogoScreen" class="fullscreen hidden">
+    <img src="game-logo.png" class="logo-large">
+</div>
+
+<!-- Main Game -->
+<div id="gameScreen" class="hidden">
+    <h2>MTI - Master The Instruction</h2>
+    <div id="instruction">Loading...</div>
+    <div id="score">Score: 0</div>
+
+    <div class="game-area">
+        <button id="mainBtn">PRESS</button>
+    </div>
+
+    <div id="spider" class="spider"></div>
+</div>
 
 <script src="script.js"></script>
 </body>
