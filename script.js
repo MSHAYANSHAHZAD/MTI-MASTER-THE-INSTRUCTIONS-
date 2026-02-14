@@ -1,18 +1,15 @@
-document.addEventListener("DOMContentLoaded", function () {
+window.onload = function() {
 
-    setTimeout(() => {
-        document.getElementById("sponsorScreen").classList.add("hidden");
-        document.getElementById("gameLogoScreen").classList.remove("hidden");
+    setTimeout(function() {
 
-        setTimeout(() => {
-            document.getElementById("gameLogoScreen").classList.add("hidden");
-            document.getElementById("gameScreen").classList.remove("hidden");
-            startGame();
-        }, 2000);
+        document.getElementById("sponsorScreen").style.display = "none";
+        document.getElementById("gameScreen").style.display = "block";
+
+        startGame();
 
     }, 3000);
 
-});
+};
 
 let score = 0;
 let spiderVisible = false;
@@ -43,7 +40,7 @@ function newRound() {
     document.getElementById("instruction").innerText = currentInstruction.text;
 
     if (currentInstruction.type.includes("SPIDER")) {
-        setTimeout(() => {
+        setTimeout(function() {
             spiderVisible = true;
             document.getElementById("spider").innerHTML = "🕷";
         }, 1500);
