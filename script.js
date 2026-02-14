@@ -1,31 +1,23 @@
 window.onload = function() {
 
-    // Sponsor → Logo → Game flow
-
     setTimeout(function() {
         document.getElementById("sponsorScreen").classList.add("hidden");
-        document.getElementById("logoScreen").classList.remove("hidden");
-
-        setTimeout(function() {
-            document.getElementById("logoScreen").classList.add("hidden");
-            document.getElementById("gameScreen").classList.remove("hidden");
-            startGame();
-        }, 2000);
-
+        document.getElementById("logoScreen").classList.add("hidden");
+        document.getElementById("gameScreen").classList.remove("hidden");
+        startGame();
     }, 3000);
 };
 
 let score = 0;
 let spiderVisible = false;
 let currentInstruction = null;
-let clickCount = 0;
-let autoCheckTimeout = null;
+let decisionTimer = null;
 
 const instructions = [
-    { text: "Press", type: "PRESS" },
-    { text: "Don't Press", type: "NO_PRESS" },
-    { text: "Press when spider appears", type: "SPIDER_PRESS" },
-    { text: "Don't press when spider appears", type: "SPIDER_NO_PRESS" }
+    { text: "Press", action: "PRESS" },
+    { text: "Don't Press", action: "NO_PRESS" },
+    { text: "Press when spider appears", action: "SPIDER_PRESS" },
+    { text: "Don't press when spider appears", action: "SPIDER_NO_PRESS" }
 ];
 
 function startGame() {
@@ -34,26 +26,25 @@ function startGame() {
 }
 
 function newRound() {
-    spiderVisible = false;
-    clickCount = 0;
-    document.getElementById("spider").innerHTML = "";
 
-    clearTimeout(autoCheckTimeout);
+    spiderVisible = false;
+    clearTimeout(decisionTimer);
+    document.getElementById("spider").innerHTML = "";
 
     currentInstruction = instructions[Math.floor(Math.random() * instructions.length)];
     document.getElementById("instruction").innerText = currentInstruction.text;
 
-    if (currentInstruction.type.includes("SPIDER")) {
+    // Spider logic
+    if (currentInstruction.action.includes("SPIDER")) {
 
         setTimeout(function() {
             spiderVisible = true;
             document.getElementById("spider").innerHTML = "🕷";
 
-            // Auto evaluate after spider appears (2 sec wait)
-            autoCheckTimeout = setTimeout(function() {
-                if (currentInstruction.type === "SPIDER_NO_PRESS") {
+            decisionTimer = setTimeout(function() {
+                if (currentInstruction.action === "SPIDER_NO_PRESS") {
                     win();
-                } else if (currentInstruction.type === "SPIDER_PRESS") {
+                } else {
                     gameOver();
                 }
             }, 2000);
@@ -61,11 +52,11 @@ function newRound() {
         }, 1500);
 
     } else {
-        // Non-spider instructions auto evaluate after 2 sec
-        autoCheckTimeout = setTimeout(function() {
-            if (currentInstruction.type === "NO_PRESS") {
+
+        decisionTimer = setTimeout(function() {
+            if (currentInstruction.action === "NO_PRESS") {
                 win();
-            } else if (currentInstruction.type === "PRESS") {
+            } else {
                 gameOver();
             }
         }, 2000);
@@ -74,9 +65,9 @@ function newRound() {
 
 function handlePress() {
 
-    clearTimeout(autoCheckTimeout);
+    clearTimeout(decisionTimer);
 
-    switch (currentInstruction.type) {
+    switch (currentInstruction.action) {
 
         case "PRESS":
             win();
