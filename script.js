@@ -11,31 +11,19 @@ const instructions = [
     { text: "Don't press when spider appears", action: "SPIDER_NO_PRESS" }
 ];
 
-window.onload = function() {
+window.onload = function () {
 
-    const sponsor = document.getElementById("sponsorScreen");
-    const logo = document.getElementById("logoScreen");
-    const game = document.getElementById("gameScreen");
+    setTimeout(() => {
+        document.getElementById("sponsorScreen").classList.add("hidden");
+        document.getElementById("logoScreen").classList.remove("hidden");
 
-    sponsor.classList.add("fade-in");
+        setTimeout(() => {
+            document.getElementById("logoScreen").classList.add("hidden");
+            document.getElementById("gameScreen").classList.remove("hidden");
+            startGame();
+        }, 1500);
 
-    setTimeout(function() {
-        sponsor.classList.add("fade-out");
-
-        setTimeout(function() {
-            sponsor.classList.add("hidden");
-            logo.classList.remove("hidden");
-            logo.classList.add("logo-pop");
-
-            setTimeout(function() {
-                logo.classList.add("hidden");
-                game.classList.remove("hidden");
-                startGame();
-            }, 1000);
-
-        }, 1000);
-
-    }, 1500);
+    }, 2000);
 };
 
 function startGame() {
@@ -49,11 +37,6 @@ function newRound() {
     clearTimeout(timerTimeout);
     document.getElementById("spider").innerHTML = "";
 
-    if (score > 0 && score % 50 === 0) {
-        roundTime -= 200;
-        if (roundTime < 1200) roundTime = 1200;
-    }
-
     const ring = document.querySelector(".timer-ring");
     ring.style.animation = "none";
     void ring.offsetWidth;
@@ -63,7 +46,7 @@ function newRound() {
     document.getElementById("instruction").innerText = currentInstruction.text;
 
     if (currentInstruction.action.includes("SPIDER")) {
-        setTimeout(function() {
+        setTimeout(() => {
             spiderVisible = true;
             document.getElementById("spider").innerHTML = "🕷";
         }, 1000);
@@ -73,48 +56,27 @@ function newRound() {
 }
 
 function handlePress() {
-
     clearTimeout(timerTimeout);
 
-    switch (currentInstruction.action) {
-
-        case "PRESS":
-            win();
-            break;
-
-        case "NO_PRESS":
-            gameOver();
-            break;
-
-        case "SPIDER_PRESS":
-            spiderVisible ? win() : gameOver();
-            break;
-
-        case "SPIDER_NO_PRESS":
-            gameOver();
-            break;
+    if (
+        (currentInstruction.action === "PRESS") ||
+        (currentInstruction.action === "SPIDER_PRESS" && spiderVisible)
+    ) {
+        win();
+    } else {
+        gameOver();
     }
 }
 
 function evaluateRound() {
 
-    switch (currentInstruction.action) {
-
-        case "PRESS":
-            gameOver();
-            break;
-
-        case "NO_PRESS":
-            win();
-            break;
-
-        case "SPIDER_PRESS":
-            gameOver();
-            break;
-
-        case "SPIDER_NO_PRESS":
-            win();
-            break;
+    if (
+        (currentInstruction.action === "NO_PRESS") ||
+        (currentInstruction.action === "SPIDER_NO_PRESS")
+    ) {
+        win();
+    } else {
+        gameOver();
     }
 }
 
@@ -127,7 +89,6 @@ function win() {
 function gameOver() {
     alert("Game Over! Score: " + score);
     score = 0;
-    roundTime = 2500;
     document.getElementById("score").innerText = "Score: 0";
     newRound();
 }
