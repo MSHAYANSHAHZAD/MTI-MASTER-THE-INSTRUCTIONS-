@@ -7,14 +7,13 @@
 body {
     background: black;
     font-family: Arial, sans-serif;
-    overflow: hidden;
+    overflow: hidden;   /* THIS STOPS SCROLL */
+    height: 100vh;
     color: white;
-    text-align: center;
 }
 
-/* FULLSCREEN */
 .fullscreen {
-    position: fixed;
+    position: fixed;   /* NOT relative */
     top: 0;
     left: 0;
     width: 100%;
@@ -82,9 +81,8 @@ body {
     100% { transform: scale(1); opacity: 1; }
 }
 
-/* GAME SCREEN */
 #gameScreen {
-    position: fixed;
+    position: fixed;      /* IMPORTANT */
     top: 0;
     left: 0;
     width: 100%;
