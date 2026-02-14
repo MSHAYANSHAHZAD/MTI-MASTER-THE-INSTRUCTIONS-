@@ -10,27 +10,31 @@ const spiderEl = document.getElementById("spider");
 const button = document.getElementById("mainBtn");
 const timerRing = document.getElementById("timer-ring");
 
-button.addEventListener("click", handlePress);
+button.addEventListener("click", () => {
+    playerPressed = true;
+});
 
 const instructions = [
-    "Press",
-    "Don't Press",
-    "Do Nothing",
-    "Ignore This",
-    "Press when spider appears",
-    "Don't press when spider appears"
+    { text: "Press", type: "PRESS" },
+    { text: "Don't Press", type: "NO_PRESS" },
+    { text: "Do Nothing", type: "NO_PRESS" },
+    { text: "Ignore This", type: "NO_PRESS" },
+    { text: "Press when spider appears", type: "SPIDER_PRESS" },
+    { text: "Don't press when spider appears", type: "SPIDER_NO_PRESS" }
 ];
 
 function newRound() {
+
     playerPressed = false;
     spiderVisible = false;
     spiderEl.innerHTML = "";
 
-    currentInstruction = instructions[Math.floor(Math.random() * instructions.length)];
-    instructionEl.innerText = currentInstruction;
+    const random = instructions[Math.floor(Math.random() * instructions.length)];
+    currentInstruction = random;
 
-    // Spider appears only if needed
-    if (currentInstruction.includes("spider")) {
+    instructionEl.innerText = currentInstruction.text;
+
+    if (currentInstruction.type.includes("SPIDER")) {
         setTimeout(() => {
             spiderVisible = true;
             spiderEl.innerHTML = "🕷";
@@ -49,30 +53,30 @@ function resetTimer() {
     timer = setTimeout(evaluateRound, 5000);
 }
 
-function handlePress() {
-    playerPressed = true;
-}
-
 function evaluateRound() {
 
-    let shouldPress = false;
+    let correct = false;
 
-    // Decide logically if player SHOULD have pressed
-    if (currentInstruction === "Press") {
-        shouldPress = true;
+    switch (currentInstruction.type) {
+
+        case "PRESS":
+            correct = playerPressed;
+            break;
+
+        case "NO_PRESS":
+            correct = !playerPressed;
+            break;
+
+        case "SPIDER_PRESS":
+            correct = spiderVisible && playerPressed;
+            break;
+
+        case "SPIDER_NO_PRESS":
+            correct = spiderVisible && !playerPressed;
+            break;
     }
 
-    if (currentInstruction === "Press when spider appears" && spiderVisible) {
-        shouldPress = true;
-    }
-
-    if (currentInstruction === "Don't press when spider appears" && !spiderVisible) {
-        shouldPress = true;
-    }
-
-    // For Do Nothing, Ignore, Don't Press → shouldPress stays false
-
-    if (playerPressed === shouldPress) {
+    if (correct) {
         score += 10;
         scoreEl.innerText = "Score: " + score;
         newRound();
