@@ -22,7 +22,6 @@ const instructions = [
 ];
 
 function newRound() {
-
     playerPressed = false;
     spiderVisible = false;
     spiderEl.innerHTML = "";
@@ -30,7 +29,7 @@ function newRound() {
     currentInstruction = instructions[Math.floor(Math.random() * instructions.length)];
     instructionEl.innerText = currentInstruction;
 
-    // Spider appear only if instruction needs it
+    // Spider appears only if needed
     if (currentInstruction.includes("spider")) {
         setTimeout(() => {
             spiderVisible = true;
@@ -47,57 +46,39 @@ function resetTimer() {
     timerRing.style.animation = "rotate 5s linear forwards";
 
     clearTimeout(timer);
-    timer = setTimeout(checkResult, 5000);
+    timer = setTimeout(evaluateRound, 5000);
 }
 
 function handlePress() {
     playerPressed = true;
+}
 
+function evaluateRound() {
+
+    let shouldPress = false;
+
+    // Decide logically if player SHOULD have pressed
     if (currentInstruction === "Press") {
-        nextRound(10);
+        shouldPress = true;
     }
-    else if (currentInstruction === "Don't Press") {
+
+    if (currentInstruction === "Press when spider appears" && spiderVisible) {
+        shouldPress = true;
+    }
+
+    if (currentInstruction === "Don't press when spider appears" && !spiderVisible) {
+        shouldPress = true;
+    }
+
+    // For Do Nothing, Ignore, Don't Press → shouldPress stays false
+
+    if (playerPressed === shouldPress) {
+        score += 10;
+        scoreEl.innerText = "Score: " + score;
+        newRound();
+    } else {
         gameOver();
     }
-    else if (currentInstruction === "Press when spider appears") {
-        if (spiderVisible) {
-            nextRound(20);
-        } else {
-            gameOver();
-        }
-    }
-    else if (currentInstruction === "Don't press when spider appears") {
-        if (spiderVisible) {
-            gameOver();
-        } else {
-            nextRound(10);
-        }
-    }
-    else if (currentInstruction === "Do Nothing" || currentInstruction === "Ignore This") {
-        gameOver();
-    }
-}
-
-function checkResult() {
-
-    if (currentInstruction === "Don't Press" && !playerPressed) {
-        nextRound(10);
-    }
-    else if ((currentInstruction === "Do Nothing" || currentInstruction === "Ignore This") && !playerPressed) {
-        nextRound(10);
-    }
-    else if (currentInstruction === "Don't press when spider appears" && !playerPressed) {
-        nextRound(10);
-    }
-    else {
-        gameOver();
-    }
-}
-
-function nextRound(points) {
-    score += points;
-    scoreEl.innerText = "Score: " + score;
-    newRound();
 }
 
 function gameOver() {
