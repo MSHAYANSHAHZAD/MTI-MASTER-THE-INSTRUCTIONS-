@@ -8,7 +8,6 @@ body {
 
 .fullscreen {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -18,9 +17,33 @@ body {
     display: none;
 }
 
+/* VIP Sponsor Box */
+.vip-box {
+    background: linear-gradient(145deg, #111, #222);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px lime;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 20px lime; }
+    to { box-shadow: 0 0 60px lime; }
+}
+
 .logo-large {
-    width: 250px;
+    width: 220px;
     margin-bottom: 20px;
+}
+
+.tagline {
+    font-style: italic;
+    color: #ccc;
+}
+
+.location {
+    margin-top: 10px;
+    color: lime;
 }
 
 button {
