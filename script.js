@@ -1,37 +1,30 @@
 let score = 0;
 let spiderVisible = false;
-let currentInstruction = "";
-let timer;
-let playerPressed = false;
+let currentInstruction = null;
 
 const instructionEl = document.getElementById("instruction");
 const scoreEl = document.getElementById("score");
 const spiderEl = document.getElementById("spider");
 const button = document.getElementById("mainBtn");
-const timerRing = document.getElementById("timer-ring");
 
-button.addEventListener("click", () => {
-    playerPressed = true;
-});
+button.addEventListener("click", handlePress);
 
 const instructions = [
     { text: "Press", type: "PRESS" },
     { text: "Don't Press", type: "NO_PRESS" },
-    { text: "Do Nothing", type: "NO_PRESS" },
-    { text: "Ignore This", type: "NO_PRESS" },
+    { text: "Double Click", type: "DOUBLE" },
     { text: "Press when spider appears", type: "SPIDER_PRESS" },
     { text: "Don't press when spider appears", type: "SPIDER_NO_PRESS" }
 ];
 
-function newRound() {
+let clickCount = 0;
 
-    playerPressed = false;
+function newRound() {
     spiderVisible = false;
     spiderEl.innerHTML = "";
+    clickCount = 0;
 
-    const random = instructions[Math.floor(Math.random() * instructions.length)];
-    currentInstruction = random;
-
+    currentInstruction = instructions[Math.floor(Math.random() * instructions.length)];
     instructionEl.innerText = currentInstruction.text;
 
     if (currentInstruction.type.includes("SPIDER")) {
@@ -40,49 +33,136 @@ function newRound() {
             spiderEl.innerHTML = "🕷";
         }, 1500);
     }
-
-    resetTimer();
 }
 
-function resetTimer() {
-    timerRing.style.animation = "none";
-    void timerRing.offsetWidth;
-    timerRing.style.animation = "rotate 5s linear forwards";
-
-    clearTimeout(timer);
-    timer = setTimeout(evaluateRound, 5000);
-}
-
-function evaluateRound() {
-
-    let correct = false;
+function handlePress() {
+    clickCount++;
 
     switch (currentInstruction.type) {
 
         case "PRESS":
-            correct = playerPressed;
+            win();
             break;
 
         case "NO_PRESS":
-            correct = !playerPressed;
+            gameOver();
+            break;
+
+        case "DOUBLE":
+            if (clickCount === 2) {
+                win();
+            }
             break;
 
         case "SPIDER_PRESS":
-            correct = spiderVisible && playerPressed;
+            if (spiderVisible) {
+                win();
+            } else {
+                gameOver();
+            }
             break;
 
         case "SPIDER_NO_PRESS":
-            correct = spiderVisible && !playerPressed;
+            if (spiderVisible) {
+                gameOver();
+            } else {
+                win();
+            }
             break;
     }
+}
 
-    if (correct) {
-        score += 10;
-        scoreEl.innerText = "Score: " + score;
-        newRound();
-    } else {
-        gameOver();
+function win() {
+    score += 10;
+    scoreEl.innerText = "Score: " + score;
+    newRound();
+}
+
+function gameOver() {
+    alert("Game Over! Score: " + score);
+    score = 0;
+    scoreEl.innerText = "Score: 0";
+    newRound();
+}
+
+newRound();let score = 0;
+let spiderVisible = false;
+let currentInstruction = null;
+
+const instructionEl = document.getElementById("instruction");
+const scoreEl = document.getElementById("score");
+const spiderEl = document.getElementById("spider");
+const button = document.getElementById("mainBtn");
+
+button.addEventListener("click", handlePress);
+
+const instructions = [
+    { text: "Press", type: "PRESS" },
+    { text: "Don't Press", type: "NO_PRESS" },
+    { text: "Double Click", type: "DOUBLE" },
+    { text: "Press when spider appears", type: "SPIDER_PRESS" },
+    { text: "Don't press when spider appears", type: "SPIDER_NO_PRESS" }
+];
+
+let clickCount = 0;
+
+function newRound() {
+    spiderVisible = false;
+    spiderEl.innerHTML = "";
+    clickCount = 0;
+
+    currentInstruction = instructions[Math.floor(Math.random() * instructions.length)];
+    instructionEl.innerText = currentInstruction.text;
+
+    if (currentInstruction.type.includes("SPIDER")) {
+        setTimeout(() => {
+            spiderVisible = true;
+            spiderEl.innerHTML = "🕷";
+        }, 1500);
     }
+}
+
+function handlePress() {
+    clickCount++;
+
+    switch (currentInstruction.type) {
+
+        case "PRESS":
+            win();
+            break;
+
+        case "NO_PRESS":
+            gameOver();
+            break;
+
+        case "DOUBLE":
+            if (clickCount === 2) {
+                win();
+            }
+            break;
+
+        case "SPIDER_PRESS":
+            if (spiderVisible) {
+                win();
+            } else {
+                gameOver();
+            }
+            break;
+
+        case "SPIDER_NO_PRESS":
+            if (spiderVisible) {
+                gameOver();
+            } else {
+                win();
+            }
+            break;
+    }
+}
+
+function win() {
+    score += 10;
+    scoreEl.innerText = "Score: " + score;
+    newRound();
 }
 
 function gameOver() {
