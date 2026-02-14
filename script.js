@@ -11,7 +11,7 @@ window.onload = function() {
 let score = 0;
 let spiderVisible = false;
 let currentInstruction = null;
-let decisionTimer = null;
+let timerTimeout = null;
 
 const instructions = [
     { text: "Press", action: "PRESS" },
@@ -28,44 +28,31 @@ function startGame() {
 function newRound() {
 
     spiderVisible = false;
-    clearTimeout(decisionTimer);
+    clearTimeout(timerTimeout);
     document.getElementById("spider").innerHTML = "";
+
+    // Reset timer animation
+    const ring = document.querySelector(".timer-ring");
+    ring.style.animation = "none";
+    void ring.offsetWidth;
+    ring.style.animation = "spin 4s linear forwards";
 
     currentInstruction = instructions[Math.floor(Math.random() * instructions.length)];
     document.getElementById("instruction").innerText = currentInstruction.text;
 
-    // Spider logic
     if (currentInstruction.action.includes("SPIDER")) {
-
         setTimeout(function() {
             spiderVisible = true;
             document.getElementById("spider").innerHTML = "🕷";
-
-            decisionTimer = setTimeout(function() {
-                if (currentInstruction.action === "SPIDER_NO_PRESS") {
-                    win();
-                } else {
-                    gameOver();
-                }
-            }, 2000);
-
         }, 1500);
-
-    } else {
-
-        decisionTimer = setTimeout(function() {
-            if (currentInstruction.action === "NO_PRESS") {
-                win();
-            } else {
-                gameOver();
-            }
-        }, 2000);
     }
+
+    timerTimeout = setTimeout(evaluateRound, 4000);
 }
 
 function handlePress() {
 
-    clearTimeout(decisionTimer);
+    clearTimeout(timerTimeout);
 
     switch (currentInstruction.action) {
 
@@ -83,6 +70,28 @@ function handlePress() {
 
         case "SPIDER_NO_PRESS":
             gameOver();
+            break;
+    }
+}
+
+function evaluateRound() {
+
+    switch (currentInstruction.action) {
+
+        case "PRESS":
+            gameOver();
+            break;
+
+        case "NO_PRESS":
+            win();
+            break;
+
+        case "SPIDER_PRESS":
+            gameOver();
+            break;
+
+        case "SPIDER_NO_PRESS":
+            win();
             break;
     }
 }
