@@ -6,14 +6,15 @@
 
 body {
     background: black;
-    font-family: Arial, sans-serif;
-    overflow: hidden;   /* THIS STOPS SCROLL */
-    height: 100vh;
     color: white;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
 }
 
-.fullscreen {
-    position: fixed;   /* NOT relative */
+/* Fullscreen screens */
+.screen {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -23,93 +24,24 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    text-align: center;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* LOGO */
-.logo-large {
+.logo {
     width: 250px;
+    margin-bottom: 20px;
 }
 
-/* SPONSOR TEXT */
-.vip-box h1 {
-    margin-bottom: 10px;
-}
-
-.vip-box h2 {
-    margin-bottom: 10px;
-}
-
-.tagline {
-    color: #ccc;
-}
-
-.location {
-    color: gold;
-    margin-top: 10px;
-}
-
-/* INTRO ANIMATION */
-.fade-in {
-    animation: fadeIn 1.5s ease forwards;
-}
-
-.fade-out {
-    animation: fadeOut 1s ease forwards;
-}
-
-.logo-pop {
-    animation: pop 0.8s ease forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-@keyframes pop {
-    0% { transform: scale(0.6); opacity: 0; }
-    70% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-#gameScreen {
-    position: fixed;      /* IMPORTANT */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: radial-gradient(circle at center, #111 0%, #000 70%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-/* TEXT */
-#instruction {
-    margin-top: 20px;
-    font-size: 20px;
-}
-
-#score {
-    margin-top: 10px;
-}
-
-/* BUTTON + TIMER */
+/* Game layout */
 .button-wrapper {
     position: relative;
     width: 160px;
     height: 160px;
-    margin-top: 40px;
+    margin-top: 30px;
 }
 
 #mainBtn {
@@ -123,7 +55,6 @@ body {
     background: crimson;
     color: white;
     font-size: 18px;
-    z-index: 2;
 }
 
 .timer-ring {
@@ -142,6 +73,6 @@ body {
 }
 
 .spider {
-    font-size: 45px;
+    font-size: 40px;
     margin-top: 20px;
 }
