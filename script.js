@@ -1,3 +1,5 @@
+const smartlink = "https://www.effectivegatecpm.com/h7m7c9ns?key=ab79633823d61c812aa6a556451fe8b6";
+
 let score = 0;
 let spiderVisible = false;
 let currentInstruction = null;
@@ -12,18 +14,7 @@ const instructions = [
 ];
 
 window.onload = function () {
-
-    setTimeout(() => {
-        document.getElementById("sponsorScreen").classList.add("hidden");
-        document.getElementById("logoScreen").classList.remove("hidden");
-
-        setTimeout(() => {
-            document.getElementById("logoScreen").classList.add("hidden");
-            document.getElementById("gameScreen").classList.remove("hidden");
-            startGame();
-        }, 1500);
-
-    }, 2000);
+    startGame();
 };
 
 function startGame() {
@@ -35,12 +26,16 @@ function newRound() {
 
     spiderVisible = false;
     clearTimeout(timerTimeout);
-    document.getElementById("spider").innerHTML = "";
+
+    const spiderEl = document.getElementById("spider");
+    if (spiderEl) spiderEl.innerHTML = "";
 
     const ring = document.querySelector(".timer-ring");
-    ring.style.animation = "none";
-    void ring.offsetWidth;
-    ring.style.animation = "spin " + roundTime + "ms linear forwards";
+    if (ring) {
+        ring.style.animation = "none";
+        void ring.offsetWidth;
+        ring.style.animation = "spin " + roundTime + "ms linear forwards";
+    }
 
     currentInstruction = instructions[Math.floor(Math.random() * instructions.length)];
     document.getElementById("instruction").innerText = currentInstruction.text;
@@ -48,7 +43,7 @@ function newRound() {
     if (currentInstruction.action.includes("SPIDER")) {
         setTimeout(() => {
             spiderVisible = true;
-            document.getElementById("spider").innerHTML = "🕷";
+            if (spiderEl) spiderEl.innerHTML = "🕷";
         }, 1000);
     }
 
@@ -59,7 +54,7 @@ function handlePress() {
     clearTimeout(timerTimeout);
 
     if (
-        (currentInstruction.action === "PRESS") ||
+        currentInstruction.action === "PRESS" ||
         (currentInstruction.action === "SPIDER_PRESS" && spiderVisible)
     ) {
         win();
@@ -71,8 +66,8 @@ function handlePress() {
 function evaluateRound() {
 
     if (
-        (currentInstruction.action === "NO_PRESS") ||
-        (currentInstruction.action === "SPIDER_NO_PRESS")
+        currentInstruction.action === "NO_PRESS" ||
+        currentInstruction.action === "SPIDER_NO_PRESS"
     ) {
         win();
     } else {
@@ -87,8 +82,14 @@ function win() {
 }
 
 function gameOver() {
+
     alert("Game Over! Score: " + score);
+
+    // 🔥 Har OUT pe Ad
+    window.open(smartlink, "_blank");
+
     score = 0;
     document.getElementById("score").innerText = "Score: 0";
+
     newRound();
 }
